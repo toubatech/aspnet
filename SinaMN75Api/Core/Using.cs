@@ -1,0 +1,9 @@
+﻿global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore;
+global using System.Diagnostics;
+global using Microsoft.AspNetCore.Identity;
+global using Utilities_aspnet.Utilities;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.AspNetCore.Mvc;
+global using Utilities_aspnet.Utilities;
+global using Utilities_aspnet.Entities;
