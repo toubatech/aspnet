@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SinaMN75Api.Core;
 
@@ -11,9 +12,10 @@ using SinaMN75Api.Core;
 namespace SinaMN75Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220621194032_m2")]
+    partial class m2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -783,7 +785,7 @@ namespace SinaMN75Api.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("VisitsCount")
+                    b.Property<int?>("VisitCount")
                         .HasColumnType("int");
 
                     b.Property<string>("Website")
@@ -1467,7 +1469,7 @@ namespace SinaMN75Api.Migrations
             modelBuilder.Entity("Utilities_aspnet.Entities.VoteEntity", b =>
                 {
                     b.HasOne("Utilities_aspnet.Entities.ProductEntity", "Product")
-                        .WithMany("Votes")
+                        .WithMany()
                         .HasForeignKey("ProductId");
 
                     b.HasOne("Utilities_aspnet.Entities.UserEntity", "User")
@@ -1542,8 +1544,6 @@ namespace SinaMN75Api.Migrations
                     b.Navigation("Teams");
 
                     b.Navigation("VoteFields");
-
-                    b.Navigation("Votes");
                 });
 
             modelBuilder.Entity("Utilities_aspnet.Entities.UserEntity", b =>
