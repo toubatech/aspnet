@@ -33,5 +33,4 @@ jobs:
           server: api.SinaMN75.com
           username: Utilities_aspnet
           password: BetterSoft1234!@#$
-          dangerous-clean-slate: true
   

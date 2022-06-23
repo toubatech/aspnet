@@ -21,4 +21,5 @@ public class AppDbContext : IdentityDbContext<UserEntity> {
 	public DbSet<FormFieldEntity> FormFields { get; set; }
 	public DbSet<ChatEntity> Chats { get; set; }
 	public DbSet<CommentEntity> Comments { get; set; }
+	public DbSet<BlockEntity> Blocks { get; set; }
 }
