@@ -22,4 +22,5 @@ public class AppDbContext : IdentityDbContext<UserEntity> {
 	public DbSet<ChatEntity> Chats { get; set; }
 	public DbSet<CommentEntity> Comments { get; set; }
 	public DbSet<BlockEntity> Blocks { get; set; }
+	
 }
