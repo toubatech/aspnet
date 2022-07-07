@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SinaMN75Api.Core;
 
@@ -11,9 +12,10 @@ using SinaMN75Api.Core;
 namespace SinaMN75Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220630161135_m10")]
+    partial class m10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -283,9 +285,6 @@ namespace SinaMN75Api.Migrations
                     b.Property<string>("TitleTr1")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TitleTr2")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
 
@@ -552,39 +551,6 @@ namespace SinaMN75Api.Migrations
                     b.ToTable("Gender");
                 });
 
-            modelBuilder.Entity("Utilities_aspnet.Entities.LikeCommentEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CommentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double?>("Score")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CommentId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("LikeComment");
-                });
-
             modelBuilder.Entity("Utilities_aspnet.Entities.LocationEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -714,9 +680,6 @@ namespace SinaMN75Api.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CreatorUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
@@ -742,8 +705,6 @@ namespace SinaMN75Api.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatorUserId");
 
                     b.HasIndex("UserId");
 
@@ -1047,9 +1008,6 @@ namespace SinaMN75Api.Migrations
                     b.Property<decimal?>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Authority")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -1059,17 +1017,11 @@ namespace SinaMN75Api.Migrations
                     b.Property<string>("Descriptions")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("GatewayName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PaymentId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("ProductId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<long?>("RefId")
-                        .HasColumnType("bigint");
 
                     b.Property<int?>("StatusId")
                         .HasColumnType("int");
@@ -1509,21 +1461,6 @@ namespace SinaMN75Api.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Utilities_aspnet.Entities.LikeCommentEntity", b =>
-                {
-                    b.HasOne("Utilities_aspnet.Entities.CommentEntity", "Comment")
-                        .WithMany("LikeComments")
-                        .HasForeignKey("CommentId");
-
-                    b.HasOne("Utilities_aspnet.Entities.UserEntity", "User")
-                        .WithMany("LikeComments")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Comment");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Utilities_aspnet.Entities.LocationEntity", b =>
                 {
                     b.HasOne("Utilities_aspnet.Entities.LocationEntity", "Parent")
@@ -1596,15 +1533,9 @@ namespace SinaMN75Api.Migrations
 
             modelBuilder.Entity("Utilities_aspnet.Entities.NotificationEntity", b =>
                 {
-                    b.HasOne("Utilities_aspnet.Entities.UserEntity", "CreatorUser")
-                        .WithMany()
-                        .HasForeignKey("CreatorUserId");
-
                     b.HasOne("Utilities_aspnet.Entities.UserEntity", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
-
-                    b.Navigation("CreatorUser");
 
                     b.Navigation("User");
                 });
@@ -1767,8 +1698,6 @@ namespace SinaMN75Api.Migrations
                 {
                     b.Navigation("Children");
 
-                    b.Navigation("LikeComments");
-
                     b.Navigation("Media");
                 });
 
@@ -1818,8 +1747,6 @@ namespace SinaMN75Api.Migrations
             modelBuilder.Entity("Utilities_aspnet.Entities.UserEntity", b =>
                 {
                     b.Navigation("FormBuilders");
-
-                    b.Navigation("LikeComments");
 
                     b.Navigation("Location");
 
