@@ -9,6 +9,7 @@
   },
   "profiles": {
     "SinaMN75Api": {
+      "launchUrl": "swagger",
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
