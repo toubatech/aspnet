@@ -24,5 +24,4 @@ public class AppDbContext : IdentityDbContext<UserEntity> {
 	public DbSet<BlockEntity> Blocks { get; set; }
 	public DbSet<OrderEntity> Orders { get; set; }
 	public DbSet<TopProductEntity> TopProducts { get; set; }
-	public DbSet<DiscountEntity> Discounts { get; set; }
 }
