@@ -1790,7 +1790,7 @@ namespace SinaMN75Api.Migrations
                         .HasForeignKey("OrderId");
 
                     b.HasOne("Utilities_aspnet.Entities.ProductEntity", "Product")
-                        .WithMany()
+                        .WithMany("OrderDetails")
                         .HasForeignKey("ProductId");
 
                     b.Navigation("Order");
@@ -1998,6 +1998,8 @@ namespace SinaMN75Api.Migrations
                     b.Navigation("Locations");
 
                     b.Navigation("Media");
+
+                    b.Navigation("OrderDetails");
 
                     b.Navigation("Reports");
 
