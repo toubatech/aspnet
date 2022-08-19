@@ -1,3 +1,5 @@
+﻿using Microsoft.EntityFrameworkCore.Metadata;
+
 namespace SinaMN75Api.Core;
 
 public class AppDbContext : IdentityDbContext<UserEntity> {
@@ -25,4 +27,12 @@ public class AppDbContext : IdentityDbContext<UserEntity> {
 	public DbSet<OrderEntity> Orders { get; set; }
 	public DbSet<TopProductEntity> TopProducts { get; set; }
 	public DbSet<DiscountEntity> Discounts { get; set; }
+
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		base.OnModelCreating(modelBuilder);
+
+		modelBuilder.Entity<CommentEntity>().HasMany(e => e.Children).WithOne().OnDelete(DeleteBehavior.Cascade);
+	}
 }
+
