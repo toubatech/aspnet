@@ -19,7 +19,6 @@ public class AppDbContext : IdentityDbContext<UserEntity>
     public DbSet<VoteFieldEntity> VoteFields { get; set; }
     public DbSet<ContentEntity> Contents { get; set; }
     public DbSet<OtpEntity> Otps { get; set; }
-    public DbSet<LocationEntity> Locations { get; set; }
     public DbSet<CategoryEntity> Categories { get; set; }
     public DbSet<FormFieldEntity> FormFields { get; set; }
     public DbSet<ChatEntity> Chats { get; set; }
