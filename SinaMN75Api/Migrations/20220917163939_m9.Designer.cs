@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SinaMN75Api.Core;
 
@@ -11,9 +12,10 @@ using SinaMN75Api.Core;
 namespace SinaMN75Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220917163939_m9")]
+    partial class m9
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -937,12 +939,6 @@ namespace SinaMN75Api.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int?>("DiscountPercent")
-                        .HasColumnType("int");
-
-                    b.Property<double?>("DiscountPrice")
-                        .HasColumnType("float");
-
                     b.Property<string>("Email")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -992,9 +988,6 @@ namespace SinaMN75Api.Migrations
                     b.Property<double?>("MinPrice")
                         .HasColumnType("float");
 
-                    b.Property<double?>("OnTimeDelivery")
-                        .HasColumnType("float");
-
                     b.Property<string>("Packaging")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -1008,13 +1001,6 @@ namespace SinaMN75Api.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<double?>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<string>("RelatedIds")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<double?>("ResponseTime")
                         .HasColumnType("float");
 
                     b.Property<string>("Shipping")
