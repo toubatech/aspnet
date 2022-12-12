@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-
-namespace SinaMN75Api.Core;
+﻿namespace SinaMN75Api.Core;
 
 public class AppDbContext : IdentityDbContext<UserEntity>
 {
