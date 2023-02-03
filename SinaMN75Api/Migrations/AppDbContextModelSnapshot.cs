@@ -1007,6 +1007,10 @@ namespace SinaMN75Api.Migrations
                     b.Property<string>("ProductOwnerId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("ProductUseCase")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<DateTime?>("ReceivedDate")
                         .HasColumnType("datetime2");
 
@@ -1115,6 +1119,9 @@ namespace SinaMN75Api.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ExpireDate")
                         .HasColumnType("datetime2");
 
                     b.Property<double?>("Height")
