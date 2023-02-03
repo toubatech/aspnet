@@ -1,4 +1,6 @@
-﻿namespace SinaMN75Api.Core;
+﻿using SinaMN75Api.Models;
+
+namespace SinaMN75Api.Core;
 
 public class AppDbContext : IdentityDbContext<UserEntity>
 {
@@ -25,7 +27,8 @@ public class AppDbContext : IdentityDbContext<UserEntity>
     public DbSet<OrderEntity> Orders { get; set; }
     public DbSet<TopProductEntity> TopProducts { get; set; }
     public DbSet<DiscountEntity> Discounts { get; set; }
-
+    public DbSet<ChatRoom> ChatRoom { get; set; }
+    public DbSet<ChatMessage> ChatMessages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
