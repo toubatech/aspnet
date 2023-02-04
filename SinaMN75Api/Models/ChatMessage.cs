@@ -11,5 +11,6 @@ namespace SinaMN75Api.Models
 		public string MessageText { get; set; } = null!;
 
 		public bool ReadMessage { get; set; }
-	}
+        public List<Emoji> Emojies { get; set; } = new List<Emoji>();
+    }
 }
