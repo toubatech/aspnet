@@ -1316,6 +1316,40 @@ namespace SinaMN75Api.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("Utilities_aspnet.Entities.ProductInsight", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("ProductEntityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Reaction")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductEntityId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ProductsInsight");
+                });
+
             modelBuilder.Entity("Utilities_aspnet.Entities.ReportEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1565,6 +1599,9 @@ namespace SinaMN75Api.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("IsLoggedIn")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsOnline")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
@@ -2211,6 +2248,22 @@ namespace SinaMN75Api.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Utilities_aspnet.Entities.ProductInsight", b =>
+                {
+                    b.HasOne("Utilities_aspnet.Entities.ProductEntity", null)
+                        .WithMany("ProductInsights")
+                        .HasForeignKey("ProductEntityId")
+                        .OnDelete(DeleteBehavior.ClientCascade);
+
+                    b.HasOne("Utilities_aspnet.Entities.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Utilities_aspnet.Entities.ReportEntity", b =>
                 {
                     b.HasOne("Utilities_aspnet.Entities.UserEntity", "CreatorUser")
@@ -2393,6 +2446,8 @@ namespace SinaMN75Api.Migrations
                     b.Navigation("Media");
 
                     b.Navigation("OrderDetails");
+
+                    b.Navigation("ProductInsights");
 
                     b.Navigation("Reports");
 

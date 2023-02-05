@@ -25,6 +25,7 @@ public class AppDbContext : IdentityDbContext<UserEntity>
     public DbSet<OrderEntity> Orders { get; set; }
     public DbSet<TopProductEntity> TopProducts { get; set; }
     public DbSet<DiscountEntity> Discounts { get; set; }
+    public DbSet<ProductInsight> ProductInsights { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,7 +35,7 @@ public class AppDbContext : IdentityDbContext<UserEntity>
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {
             relationship.DeleteBehavior = DeleteBehavior.ClientCascade;
-        } 
+        }
     }
 }
 

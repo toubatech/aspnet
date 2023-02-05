@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SinaMN75Api.Migrations
 {
-    public partial class inin : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -65,6 +65,7 @@ namespace SinaMN75Api.Migrations
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     AccessLevel = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Badge = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsOnline = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -783,6 +784,33 @@ namespace SinaMN75Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProductsInsight",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Reaction = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProductEntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductsInsight", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductsInsight_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProductsInsight_Products_ProductEntityId",
+                        column: x => x.ProductEntityId,
+                        principalTable: "Products",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Reports",
                 columns: table => new
                 {
@@ -1398,6 +1426,16 @@ namespace SinaMN75Api.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductsInsight_ProductEntityId",
+                table: "ProductsInsight",
+                column: "ProductEntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductsInsight_UserId",
+                table: "ProductsInsight",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reports_CreatorUserId",
                 table: "Reports",
                 column: "CreatorUserId");
@@ -1518,6 +1556,9 @@ namespace SinaMN75Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "Otps");
+
+            migrationBuilder.DropTable(
+                name: "ProductsInsight");
 
             migrationBuilder.DropTable(
                 name: "Reports");
