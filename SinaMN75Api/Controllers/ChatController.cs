@@ -23,10 +23,10 @@ namespace signalrtest.Controllers
             _messagerepository = messageRepository;
         }
 
-        #region Messaging
+        #region One to One Messaging
         [HttpPost]
-        [Route("/[controller]/send-message")]
-        public async Task<ActionResult> SendMessage(ChatMessage message)
+        [Route("/[controller]/send-private-message")]
+        public async Task<ActionResult> SendPrivateMessage(ChatMessage message)
         {
             var receiver = await _context.Users.FirstOrDefaultAsync(x => x.Id == message.ToUserId);
             if (receiver == null)
@@ -52,6 +52,87 @@ namespace signalrtest.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("[controller]/get-one-to-one-messages/{firstUserId}/{secondUserId}")]
+        public async Task<IActionResult> GetPrivateMessages(string firstUserId, string secondUserId)
+        {
+            var messages = await _messagerepository.GetPrivateMessages(firstUserId, secondUserId);
+            if (messages == null)
+                return NoContent();
+
+            return Ok(messages);
+
+        }
+
+        [HttpPut]
+        [Route("[controller]/edit-one-to-one-messages/{senderId}/{receiverId}/{messageText}/{messageId}")]
+        public async Task<IActionResult> EditPrivateMessages(string senderId, string receiverId, string messageText, Guid messageId)
+        {
+            await _messagerepository.EditPrivateMessages(messageText, messageId);
+
+            await _hub.SendEditedMessageToReceiver(senderId, receiverId, messageText, messageId);
+
+            return Ok();
+
+        }
+        [HttpDelete]
+        [Route("[controller]/delete-one-to-one-messages/{senderId}/{receiverId}/{messageId}")]
+        public async Task<IActionResult> DeletePrivateMessages(string senderId, string receiverId, Guid messageId)
+        {
+            await _messagerepository.DeletePrivateMessage(messageId);
+
+            await _hub.SendDeletedMessageToReceiver(senderId, receiverId, messageId);
+
+            return Ok();
+
+        }
+        #endregion
+
+        #region Group Messaging
+        [HttpPost]
+        [Route("/[controller]/send-group-message/{roomId}")]
+        public async Task<ActionResult> SendGroupMessage(ChatMessage message, Guid roomId)
+        {
+            var roomUsers = await _chatroomRepository.AddMessageToChatroom(roomId, message);
+
+            await _hub.SendMessageToGroup(roomId.ToString(), roomUsers, message.MessageText);
+
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("/[controller]/get-group-message/{roomId}")]
+        public async Task<ActionResult> GetGroupMessage(Guid roomId)
+        {
+            var roomMessages = await _chatroomRepository.GetChatroomMessages(roomId);
+
+            return Ok(roomMessages);
+        }
+
+        [HttpPut]
+        [Route("/[controller]/edit-group-message/{roomId}")]
+        public async Task<ActionResult> EditGroupMessage(Guid roomId, ChatMessage message)
+        {
+            var roomUsers = await _chatroomRepository.EditGroupMessage(roomId, message);
+
+            await _hub.SendEditedMessageToGroup(roomId.ToString(), roomUsers, message.MessageText, message.Id.ToString());
+
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("/[controller]/delete-group-message/{roomId}")]
+        public async Task<ActionResult> DeleteGroupMessage(Guid roomId, ChatMessage message)
+        {
+            var roomUsers = await _chatroomRepository.DeleteGroupMessage(roomId, message);
+
+            await _hub.SendDeletedMessageToGroup(roomId.ToString(), roomUsers, message.MessageText, message.Id.ToString());
+
+            return Ok();
+        }
+        #endregion
+
+        #region Seen/Online/Emoji
         //Todo: change method parameters to a dto
         [HttpPut]
         [Route("/[controller]/modify-online-status/{userId}/{status}")]
@@ -99,8 +180,7 @@ namespace signalrtest.Controllers
             await _messagerepository.AddEmojiToMessage(emoji, messageId, userId);
             return Ok();
 
-        }
-
+        } 
         #endregion
 
         #region Chatroom

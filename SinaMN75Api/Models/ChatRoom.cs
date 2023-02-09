@@ -8,5 +8,6 @@ namespace SinaMN75Api.Models
         public string Name { get; set; }
         public List<Guid> Users { get; set; }
         public Guid Creator { get; set; }
+        public List<ChatMessage> Messages { get; set; }
     }
 }

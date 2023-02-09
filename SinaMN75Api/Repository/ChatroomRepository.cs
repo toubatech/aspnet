@@ -10,6 +10,10 @@ namespace SinaMN75Api.Repository
         Task DeleteChatroom(Guid chatroomId, Guid userId);
         Task<List<ChatRoom>> GetChatroomsByName(string chatroomName);
         Task AddUserToChatroom(Guid chatroomId, Guid userId);
+        Task<List<string>> AddMessageToChatroom(Guid roomId, ChatMessage message);
+        Task<List<ChatMessage>> GetChatroomMessages(Guid chatroomId);
+        Task<List<string>> EditGroupMessage(Guid roomId, ChatMessage message);
+        Task<List<string>> DeleteGroupMessage(Guid roomId, ChatMessage message);
     }
     public class ChatroomRepository : IChatroomRepository
     {
@@ -18,6 +22,19 @@ namespace SinaMN75Api.Repository
         public ChatroomRepository(AppDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<List<string>> AddMessageToChatroom(Guid roomId, ChatMessage message)
+        {
+            var room = await _context.Set<ChatRoom>().FirstOrDefaultAsync(x => x.Id == roomId);
+
+            room.Messages.Add(message);
+            await _context.SaveChangesAsync();
+
+            var output = room.Users.Select(x => x.ToString()).ToList();
+
+            return output;
+
         }
 
         public async Task AddUserToChatroom(Guid chatroomId, Guid userId)
@@ -61,6 +78,23 @@ namespace SinaMN75Api.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task<List<string>> DeleteGroupMessage(Guid roomId, ChatMessage message)
+        {
+            var room = await _context.Set<ChatRoom>().FirstOrDefaultAsync(x => x.Id == roomId);
+            if (room != null)
+            {
+                var messageToDelete = room.Messages.FirstOrDefault(x => x.Id == message.Id);
+                if (messageToDelete.Id.ToString() == message.FromUserId || messageToDelete.Id == room.Creator)
+                {
+                    room.Messages.Remove(messageToDelete);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            var output = room.Users.Select(x => x.ToString()).ToList();
+
+            return output;
+        }
+
         public async Task EditChatroom(string chatrooomName, Guid userId)
         {
             var chatroom = await _context.Set<ChatRoom>().FirstOrDefaultAsync(x => x.Name == chatrooomName);
@@ -75,6 +109,30 @@ namespace SinaMN75Api.Repository
             }
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<string>> EditGroupMessage(Guid roomId, ChatMessage message)
+        {
+            var room = await _context.Set<ChatRoom>().FirstOrDefaultAsync(x => x.Id == roomId);
+            if (room != null)
+            {
+                var messageToEdit = room.Messages.FirstOrDefault(x => x.Id == message.Id);
+                if (messageToEdit.Id.ToString() == message.FromUserId)
+                {
+                    messageToEdit.UpdatedAt = DateTime.Now;
+                    messageToEdit.MessageText = message.MessageText;
+                }
+            }
+            var output = room.Users.Select(x => x.ToString()).ToList();
+
+            return output;
+        }
+
+        public async Task<List<ChatMessage>> GetChatroomMessages(Guid chatroomId)
+        {
+            var room = await _context.Set<ChatRoom>().FirstOrDefaultAsync(x => x.Id == chatroomId);
+            return room.Messages;
+
         }
 
         public async Task<List<ChatRoom>> GetChatroomsByName(string chatroomName)
