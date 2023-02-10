@@ -186,7 +186,7 @@ namespace signalrtest.Controllers
         #region Chatroom
         [HttpPost]
         [Route("/[controller]/post-chatroom/{userId}/{chatroomName}")]
-        public async Task<ActionResult> CreateChatroom(string chatroomName, Guid userId)
+        public async Task<ActionResult> CreateChatroom(string chatroomName, string userId)
         {
             if (string.IsNullOrEmpty(chatroomName))
                 return BadRequest();
@@ -197,7 +197,7 @@ namespace signalrtest.Controllers
 
         [HttpPut]
         [Route("/[controller]/edit-chatroom/{userId}/{chatroomName}")]
-        public async Task<ActionResult> EditChatroom(string chatroomName, Guid userId)
+        public async Task<ActionResult> EditChatroom(string chatroomName, string userId)
         {
             if (string.IsNullOrEmpty(chatroomName) || userId == null)
                 return BadRequest();
@@ -208,7 +208,7 @@ namespace signalrtest.Controllers
 
         [HttpDelete]
         [Route("/[controller]/delete-chatroom/{userId}/{chatroomId}")]
-        public async Task<ActionResult> DeleteChatroom(Guid chatroomId, Guid userId)
+        public async Task<ActionResult> DeleteChatroom(Guid chatroomId, string userId)
         {
             if (string.IsNullOrEmpty(chatroomId.ToString()) || userId == null)
                 return BadRequest();
@@ -230,7 +230,7 @@ namespace signalrtest.Controllers
 
         [HttpPut]
         [Route("/[controller]/add-user-to-chatroom/{chatroomId}")]
-        public async Task<ActionResult> AddUserToChatroom(Guid chatroomId, Guid userId)
+        public async Task<ActionResult> AddUserToChatroom(Guid chatroomId, string userId)
         {
             await _chatroomRepository.AddUserToChatroom(chatroomId, userId);
             return Ok();

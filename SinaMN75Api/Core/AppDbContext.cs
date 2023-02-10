@@ -29,6 +29,7 @@ public class AppDbContext : IdentityDbContext<UserEntity>
     public DbSet<DiscountEntity> Discounts { get; set; }
     public DbSet<ChatRoom> ChatRoom { get; set; }
     public DbSet<ChatMessage> ChatMessages { get; set; }
+    public DbSet<Emoji> Emoji { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -10,7 +10,7 @@ namespace SinaMN75Api.Models
 
         [StringLength(2000)]
 		public string MessageText { get; set; } = null!;
-
+        //Todo: List of Seen
 		public bool ReadMessage { get; set; }
         public List<Emoji> Emojies { get; set; } = new List<Emoji>();
         public Guid RepliedTo { get; set; }
