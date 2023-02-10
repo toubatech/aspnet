@@ -1,4 +1,6 @@
-﻿using SinaMN75Api.Models;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Newtonsoft.Json;
+using SinaMN75Api.Models;
 
 namespace SinaMN75Api.Core;
 
@@ -33,11 +35,25 @@ public class AppDbContext : IdentityDbContext<UserEntity>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
 
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {
             relationship.DeleteBehavior = DeleteBehavior.ClientCascade;
         } 
     }
+    public class ChatRoomConfig : IEntityTypeConfiguration<ChatRoom>
+    {
+        public void Configure(EntityTypeBuilder<ChatRoom> builder)
+        {
+            builder
+            .Property(e => e.Users)
+            .HasConversion(
+            v => JsonConvert.SerializeObject(v),
+            v => JsonConvert.DeserializeObject<List<Guid>>(v)
+            );
+        }
+    }
+
 }
 

@@ -7,9 +7,11 @@ namespace SinaMN75Api.Repository
     public interface IMessageRepository
     {
         Task AddEmojiToMessage(EmojiEnum emoji, Guid messageId, Guid userId);
+        Task AddPrivateMessage(ChatMessage message);
         Task<List<ChatMessage>> GetPrivateMessages(string firstUser, string secondUser);
         Task EditPrivateMessages(string messageText, Guid messageId);
         Task DeletePrivateMessage(Guid messageId);
+        Task<bool> SeenMessage(Guid messageId, Guid userId);
     }
 
     public class MessageRepository : IMessageRepository
@@ -29,6 +31,12 @@ namespace SinaMN75Api.Repository
                 await _context.SaveChangesAsync();
             }
 
+        }
+
+        public async Task AddPrivateMessage(ChatMessage message)
+        {
+            await _context.Set<ChatMessage>().AddAsync(message);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeletePrivateMessage(Guid messageId)
@@ -59,6 +67,27 @@ namespace SinaMN75Api.Repository
 
             return output;
 
+        }
+
+        public async Task<bool> SeenMessage(Guid messageId, Guid userId)
+        {
+            var message = await _context.Set<ChatMessage>().FirstOrDefaultAsync(x => x.Id == messageId);
+            if(message != null)
+            {
+                if (string.IsNullOrEmpty(message.ToGroupId.ToString()))
+                {
+                    message.ReadPrivateMessage = true;
+                    await _context.SaveChangesAsync();
+                    return true;
+                } else
+                {
+                    message.SeenStatus.Add(new SeenMessage { IsSeen = true, User = userId });
+                    await _context.SaveChangesAsync();
+                    return false;
+                }
+                
+            }
+            return false;
         }
     }
 }

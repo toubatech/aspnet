@@ -33,23 +33,15 @@ namespace signalrtest.Controllers
                 return BadRequest();
             else
             {
+                await _messagerepository.AddPrivateMessage(message);
+
                 //Todo: change IsLoggedIn to IsOnline (Add IsOnline to utility entity)
                 if (receiver.IsLoggedIn)
                 {
                     await _hub.SendMessageToReceiver(message.FromUserId, message.ToUserId, message.MessageText);
-                    return Ok();
-                }
-                else
-                {
-                    await _context.ChatMessages.AddAsync(message);
-                    await _context.SaveChangesAsync();
-
-                    //push notification to receiver
-
-                    return Ok();
-
                 }
             }
+            return Ok();
         }
 
         [HttpGet]
@@ -132,7 +124,7 @@ namespace signalrtest.Controllers
         }
         #endregion
 
-        #region Seen/Online/Emoji
+        #region Seen/Online/Reaction
         //Todo: change method parameters to a dto
         [HttpPut]
         [Route("/[controller]/modify-online-status/{userId}/{status}")]
@@ -152,22 +144,20 @@ namespace signalrtest.Controllers
         //Todo: change method parameters to a dto
         [HttpPut]
         [Route("/[controller]/seen-message/{messageId}/receiverUser/senderUser")]
-        public async Task<ActionResult> HasSeenMessage(Guid messageId, string receiverUser, string senderUser)
+        public async Task<ActionResult> HasSeenPrivateMessage(Guid messageId, Guid receiverUser, string senderUser)
         {
-            var messageInDB = await _context.ChatMessages.FirstOrDefaultAsync(x => x.Id == messageId);
-            if (messageInDB == null)
-                return BadRequest();
+            var isPrivateMessage = await _messagerepository.SeenMessage(messageId, receiverUser);
 
-            messageInDB.ReadMessage = true;
-            await _context.SaveChangesAsync();
+            if(isPrivateMessage)
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == senderUser);
+                if (user == null)
+                    return BadRequest();
 
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == senderUser);
-            if (user == null)
-                return BadRequest();
-
-            //Todo:change IsLoggedIn to IsOnline
-            if (user.IsLoggedIn)
-                _hub.NotifySeenMessage(senderUser, receiverUser, messageId);
+                //Todo:change IsLoggedIn to IsOnline
+                if (user.IsLoggedIn)
+                    await _hub.NotifySeenMessage(senderUser, receiverUser.ToString(), messageId);
+            }
 
             return Ok();
 
@@ -180,7 +170,8 @@ namespace signalrtest.Controllers
             await _messagerepository.AddEmojiToMessage(emoji, messageId, userId);
             return Ok();
 
-        } 
+        }
+
         #endregion
 
         #region Chatroom
