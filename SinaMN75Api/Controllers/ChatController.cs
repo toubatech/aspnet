@@ -11,14 +11,12 @@ namespace signalrtest.Controllers
     public class ChatController : ControllerBase
     {
         private readonly AppDbContext _context;
-        private readonly ChatHub _hub;
         private readonly IChatroomRepository _chatroomRepository;
         private readonly IMessageRepository _messagerepository;
 
-        public ChatController(AppDbContext context, ChatHub hub, IChatroomRepository chatroomRepository, IMessageRepository messageRepository)
+        public ChatController(AppDbContext context, IChatroomRepository chatroomRepository, IMessageRepository messageRepository)
         {
             _context = context;
-            _hub = hub;
             _chatroomRepository = chatroomRepository;
             _messagerepository = messageRepository;
         }
@@ -35,11 +33,6 @@ namespace signalrtest.Controllers
             {
                 await _messagerepository.AddPrivateMessage(message);
 
-                //Todo: change IsLoggedIn to IsOnline (Add IsOnline to utility entity)
-                if (receiver.IsLoggedIn)
-                {
-                    await _hub.SendMessageToReceiver(message.FromUserId, message.ToUserId, message.MessageText);
-                }
             }
             return Ok();
         }
@@ -62,8 +55,6 @@ namespace signalrtest.Controllers
         {
             await _messagerepository.EditPrivateMessages(messageText, messageId);
 
-            await _hub.SendEditedMessageToReceiver(senderId, receiverId, messageText, messageId);
-
             return Ok();
 
         }
@@ -72,8 +63,6 @@ namespace signalrtest.Controllers
         public async Task<IActionResult> DeletePrivateMessages(string senderId, string receiverId, Guid messageId)
         {
             await _messagerepository.DeletePrivateMessage(messageId);
-
-            await _hub.SendDeletedMessageToReceiver(senderId, receiverId, messageId);
 
             return Ok();
 
@@ -86,8 +75,6 @@ namespace signalrtest.Controllers
         public async Task<ActionResult> SendGroupMessage(ChatMessage message, Guid roomId)
         {
             var roomUsers = await _chatroomRepository.AddMessageToChatroom(roomId, message);
-
-            await _hub.SendMessageToGroup(roomId.ToString(), roomUsers, message.MessageText);
 
             return Ok();
         }
@@ -107,8 +94,6 @@ namespace signalrtest.Controllers
         {
             var roomUsers = await _chatroomRepository.EditGroupMessage(roomId, message);
 
-            await _hub.SendEditedMessageToGroup(roomId.ToString(), roomUsers, message.MessageText, message.Id.ToString());
-
             return Ok();
         }
 
@@ -117,8 +102,6 @@ namespace signalrtest.Controllers
         public async Task<ActionResult> DeleteGroupMessage(Guid roomId, ChatMessage message)
         {
             var roomUsers = await _chatroomRepository.DeleteGroupMessage(roomId, message);
-
-            await _hub.SendDeletedMessageToGroup(roomId.ToString(), roomUsers, message.MessageText, message.Id.ToString());
 
             return Ok();
         }
@@ -154,9 +137,6 @@ namespace signalrtest.Controllers
                 if (user == null)
                     return BadRequest();
 
-                //Todo:change IsLoggedIn to IsOnline
-                if (user.IsLoggedIn)
-                    await _hub.NotifySeenMessage(senderUser, receiverUser.ToString(), messageId);
             }
 
             return Ok();
