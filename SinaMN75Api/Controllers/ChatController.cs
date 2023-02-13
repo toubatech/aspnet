@@ -24,7 +24,7 @@ namespace signalrtest.Controllers
         #region One to One Messaging
         [HttpPost]
         [Route("/[controller]/send-private-message")]
-        public async Task<ActionResult> SendPrivateMessage(ChatMessage message)
+        public async Task<ActionResult> SendPrivateMessage(ChatMessageInputDto message)
         {
             var receiver = await _context.Users.FirstOrDefaultAsync(x => x.Id == message.ToUserId);
             if (receiver == null)
@@ -72,9 +72,9 @@ namespace signalrtest.Controllers
         #region Group Messaging
         [HttpPost]
         [Route("/[controller]/send-group-message/{roomId}")]
-        public async Task<ActionResult> SendGroupMessage(ChatMessage message, Guid roomId)
+        public async Task<ActionResult> SendGroupMessage(ChatMessageInputDto message, Guid roomId)
         {
-            var roomUsers = await _chatroomRepository.AddMessageToChatroom(roomId, message);
+            await _chatroomRepository.AddMessageToChatroom(roomId, message);
 
             return Ok();
         }
@@ -90,18 +90,18 @@ namespace signalrtest.Controllers
 
         [HttpPut]
         [Route("/[controller]/edit-group-message/{roomId}")]
-        public async Task<ActionResult> EditGroupMessage(Guid roomId, ChatMessage message)
+        public async Task<ActionResult> EditGroupMessage(Guid roomId, ChatMessageEditDto message)
         {
-            var roomUsers = await _chatroomRepository.EditGroupMessage(roomId, message);
+            await _chatroomRepository.EditGroupMessage(roomId, message);
 
             return Ok();
         }
 
         [HttpDelete]
         [Route("/[controller]/delete-group-message/{roomId}")]
-        public async Task<ActionResult> DeleteGroupMessage(Guid roomId, ChatMessage message)
+        public async Task<ActionResult> DeleteGroupMessage(Guid roomId, ChatMessageDeleteDto message)
         {
-            var roomUsers = await _chatroomRepository.DeleteGroupMessage(roomId, message);
+            await _chatroomRepository.DeleteGroupMessage(roomId, message);
 
             return Ok();
         }

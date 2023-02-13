@@ -7,7 +7,7 @@ namespace SinaMN75Api.Repository
     public interface IMessageRepository
     {
         Task AddEmojiToMessage(EmojiEnum emoji, Guid messageId, Guid userId);
-        Task AddPrivateMessage(ChatMessage message);
+        Task AddPrivateMessage(ChatMessageInputDto message);
         Task<List<ChatMessage>> GetPrivateMessages(string firstUser, string secondUser);
         Task EditPrivateMessages(string messageText, Guid messageId);
         Task DeletePrivateMessage(Guid messageId);
@@ -33,9 +33,19 @@ namespace SinaMN75Api.Repository
 
         }
 
-        public async Task AddPrivateMessage(ChatMessage message)
+        public async Task AddPrivateMessage(ChatMessageInputDto message)
         {
-            await _context.Set<ChatMessage>().AddAsync(message);
+            var messageToAdd = new ChatMessage
+            {
+                Id = Guid.NewGuid(),
+                CreatedAt = DateTime.Now,
+                FromUserId = message.FromUserId,
+                ToUserId = message.ToUserId,
+                ToGroupId = message.ToGroupId,
+                MessageText = message.MessageText,
+                RepliedTo = message.RepliedTo
+            };
+            await _context.Set<ChatMessage>().AddAsync(messageToAdd);
             await _context.SaveChangesAsync();
         }
 

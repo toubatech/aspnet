@@ -1,8 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SinaMN75Api", "SinaMN75Api\SinaMN75Api.csproj", "{F2E6E67F-4D07-4689-BF92-DB378A89B40E}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SinaMN75Api", "SinaMN75Api\SinaMN75Api.csproj", "{F2E6E67F-4D07-4689-BF92-DB378A89B40E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities_aspnet", "Utilities_aspnet\Utilities_aspnet.csproj", "{A77FE61A-B27B-4A14-B3FD-DAF1E6759876}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities_aspnet", "Utilities_aspnet\Utilities_aspnet.csproj", "{A77FE61A-B27B-4A14-B3FD-DAF1E6759876}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +21,11 @@ Global
 		{A77FE61A-B27B-4A14-B3FD-DAF1E6759876}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A77FE61A-B27B-4A14-B3FD-DAF1E6759876}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A77FE61A-B27B-4A14-B3FD-DAF1E6759876}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DA79B524-CB35-4866-8A30-19B770E626B9}
 	EndGlobalSection
 EndGlobal
