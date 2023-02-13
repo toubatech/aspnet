@@ -14,34 +14,41 @@ namespace SinaMN75Api.Hubs
         #region One to One Messaging
         public async Task SendMessageToReceiver(string sender, string receiver, string message)
         {
-            var userId = _context.Users.FirstOrDefault(u => u.Id.ToLower() == receiver.ToLower()).Id;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToLower() == receiver.ToLower());
 
-            if (!string.IsNullOrEmpty(userId))
+            if (user != null)
             {
-                await Clients.User(userId).SendAsync("MessageReceived", sender, message);
+                //Todo: change IsloggedIn to IsOnline
+                if (user.IsLoggedIn)
+                    await Clients.User(user.Id).SendAsync("MessageReceived", sender, message);
+                //Todo: else => push notification for receiver
 
             }
         }
 
         public async Task SendEditedMessageToReceiver(string sender, string receiver, string message, Guid messageId)
         {
-            var userId = _context.Users.FirstOrDefault(u => u.Id.ToLower() == receiver.ToLower()).Id;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToLower() == receiver.ToLower());
 
-            if (!string.IsNullOrEmpty(userId))
+            if (user != null)
             {
-                await Clients.User(userId).SendAsync("MessageEdited", sender, message, messageId);
-
+                //Todo: change IsloggedIn to IsOnline
+                if (user.IsLoggedIn)
+                    await Clients.User(user.Id).SendAsync("MessageEdited", sender, message, messageId);
+                //Todo: else => push notification for receiver
             }
         }
 
         public async Task SendDeletedMessageToReceiver(string sender, string receiver, Guid messageId)
         {
-            var userId = _context.Users.FirstOrDefault(u => u.Id.ToLower() == receiver.ToLower()).Id;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToLower() == receiver.ToLower());
 
-            if (!string.IsNullOrEmpty(userId))
+            if (user != null)
             {
-                await Clients.User(userId).SendAsync("MessageDeleted", sender, messageId);
-
+                //Todo: change IsloggedIn to IsOnline
+                if (user.IsLoggedIn)
+                    await Clients.User(user.Id).SendAsync("MessageDeleted", sender, messageId);
+                //Todo: else => push notification for receiver
             }
         } 
         #endregion

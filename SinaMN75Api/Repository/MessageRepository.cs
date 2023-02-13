@@ -59,6 +59,7 @@ namespace SinaMN75Api.Repository
 
         public async Task<List<ChatMessage>> GetPrivateMessages(string firstUser, string secondUser)
         {
+            //Todo: add pagination to messages
             var firstMessageBatch = await _context.Set<ChatMessage>().Where(x => x.FromUserId == firstUser && x.ToUserId == secondUser).ToListAsync();
             var secondMessageBatch = await _context.Set<ChatMessage>().Where(x => x.FromUserId == secondUser && x.ToUserId == firstUser).ToListAsync();
 
