@@ -170,7 +170,7 @@ namespace signalrtest.Controllers
         [Route("/[controller]/edit-chatroom/{userId}/{chatroomName}")]
         public async Task<ActionResult> EditChatroom(string chatroomName, Guid userId)
         {
-            if (string.IsNullOrEmpty(chatroomName) || userId == null)
+            if (string.IsNullOrEmpty(chatroomName) || string.IsNullOrEmpty(userId.ToString()))
                 return BadRequest();
 
             await _chatroomRepository.EditChatroom(chatroomName, userId);
@@ -181,7 +181,7 @@ namespace signalrtest.Controllers
         [Route("/[controller]/delete-chatroom/{userId}/{chatroomId}")]
         public async Task<ActionResult> DeleteChatroom(Guid chatroomId, Guid userId)
         {
-            if (string.IsNullOrEmpty(chatroomId.ToString()) || userId == null)
+            if (string.IsNullOrEmpty(chatroomId.ToString()) || string.IsNullOrEmpty(userId.ToString()))
                 return BadRequest();
 
             await _chatroomRepository.DeleteChatroom(chatroomId, userId);
