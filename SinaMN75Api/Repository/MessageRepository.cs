@@ -17,9 +17,11 @@ namespace SinaMN75Api.Repository
     public class MessageRepository : IMessageRepository
     {
         private readonly AppDbContext _context;
-        public MessageRepository(AppDbContext context)
+        private readonly IWebHostEnvironment _hostingEnvironment;
+        public MessageRepository(AppDbContext context, IWebHostEnvironment hostingEnvironment)
         {
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
         }
         public async Task AddEmojiToMessage(EmojiEnum emoji, Guid messageId, Guid userId)
         {
@@ -47,6 +49,22 @@ namespace SinaMN75Api.Repository
                 ReferenceIdType = message.ReferenceIdType,
                 ReferenceId = message.ReferenceId ?? string.Empty,
             };
+
+            //Todo: check if this works and how to save the reference in database?
+            if(message.File != null)
+            {
+                string uploads = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+                if (message.File.Length > 0)
+                {
+                    string filePath = Path.Combine(new string[] { uploads, message.FromUserId, messageToAdd.CreatedAt.ToString(), message.File.FileName });
+                    using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await message.File.CopyToAsync(fileStream);
+                    }
+                    messageToAdd.FileName = message.File.FileName;
+                    messageToAdd.FilePath = filePath;
+                }
+            }
 
             messageToAdd.UsersMentioned = UsersListInMessage(message.MessageText);
 

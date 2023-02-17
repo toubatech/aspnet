@@ -18,6 +18,8 @@ namespace SinaMN75Api.Models
         public List<string>? UsersMentioned { get; set; }
         public string? ReferenceId { get; set; }
         public ReferenceIdType? ReferenceIdType { get; set; }
+        public string? FilePath { get; set; }
+        public string? FileName { get; set; }
 
     }
 
@@ -32,6 +34,7 @@ namespace SinaMN75Api.Models
         public Guid? RepliedTo { get; set; }
         public string? ReferenceId { get; set; }
         public ReferenceIdType? ReferenceIdType { get; set; }
+        public IFormFile? File { get; set; }
     }
 
     public class ChatMessageDeleteDto

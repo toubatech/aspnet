@@ -18,10 +18,12 @@ namespace SinaMN75Api.Repository
     public class ChatroomRepository : IChatroomRepository
     {
         private readonly AppDbContext _context;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public ChatroomRepository(AppDbContext context)
+        public ChatroomRepository(AppDbContext context, IWebHostEnvironment hostingEnvironment)
         {
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public async Task AddMessageToChatroom(Guid roomId, ChatMessageInputDto message)
@@ -44,6 +46,22 @@ namespace SinaMN75Api.Repository
             };
 
             messageToAdd.UsersMentioned = UsersListInMessage(message.MessageText);
+
+            //Todo: check if this works and how to save the reference in database?
+            if (message.File != null)
+            {
+                string uploads = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+                if (message.File.Length > 0)
+                {
+                    string filePath = Path.Combine(new string[] { uploads, message.FromUserId, messageToAdd.CreatedAt.ToString(), message.File.FileName });
+                    using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await message.File.CopyToAsync(fileStream);
+                    }
+                    messageToAdd.FileName = message.File.FileName;
+                    messageToAdd.FilePath = filePath;
+                }
+            }
 
             room.Messages.Add(messageToAdd);
             await _context.SaveChangesAsync();
