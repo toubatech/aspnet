@@ -38,11 +38,20 @@ namespace SinaMN75Api.Repository
                 ToUserId = message.ToUserId,
                 ToGroupId = message.ToGroupId,
                 MessageText = message.MessageText,
-                RepliedTo = message.RepliedTo
+                RepliedTo = message.RepliedTo,
+                ReferenceId = message.ReferenceId ?? string.Empty,
+                ReferenceIdType = message.ReferenceIdType,
             };
+
+            messageToAdd.UsersMentioned = UsersListInMessage(message.MessageText);
 
             room.Messages.Add(messageToAdd);
             await _context.SaveChangesAsync();
+
+            if (messageToAdd.UsersMentioned.Count > 0)
+            {
+                //Todo: push notifications to mentioned users.
+            }
 
         }
 
@@ -149,5 +158,42 @@ namespace SinaMN75Api.Repository
             var rooms = await _context.Set<ChatRoom>().Where(x => x.Name == chatroomName).ToListAsync();
             return rooms;
         }
+
+        private List<string> UsersListInMessage(string message)
+        {
+            while (message.Last() == '@')
+            {
+                message = message.Remove(message.Length - 1);
+            }
+
+            var count = message.Count(x => x == '@');
+
+            List<string> mentionList = new List<string>();
+
+            for (int i = 0; i < count; i++)
+            {
+                try
+                {
+                    message = message.Remove(0, message.IndexOf("@"));
+                    mentionList.Add(message.Substring(1, message.IndexOf(" ")));
+                    message = message.Remove(0, message.IndexOf(" "));
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    mentionList.Add(message.Substring(1, message.Length - 1));
+                }
+            }
+
+            foreach (var item in mentionList)
+            {
+                //Todo: checking with username or Id or any other property
+                var temp = _context.Users.FirstOrDefaultAsync(x => x.UserName == item);
+                if (temp == null)
+                    mentionList.Remove(item);
+            }
+
+            return mentionList;
+        }
+
     }
 }
