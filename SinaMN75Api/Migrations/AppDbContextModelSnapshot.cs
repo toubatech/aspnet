@@ -245,39 +245,46 @@ namespace SinaMN75Api.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FromUserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MessageText")
-                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<Guid>("PrivateLikeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("ReadPrivateMessage")
+                    b.Property<bool?>("ReadPrivateMessage")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("RepliedTo")
+                    b.Property<string>("ReferenceId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ReferenceIdType")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("RepliedTo")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ToGroupId")
+                    b.Property<Guid?>("ToGroupId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ToUserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("UsersMentioned")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ChatRoomId");
-
-                    b.HasIndex("PrivateLikeId");
 
                     b.ToTable("ChatMessages");
                 });
@@ -305,7 +312,6 @@ namespace SinaMN75Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Users")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -333,28 +339,6 @@ namespace SinaMN75Api.Migrations
                     b.HasIndex("ChatMessageId");
 
                     b.ToTable("Emoji");
-                });
-
-            modelBuilder.Entity("SinaMN75Api.Models.LikeDislike", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("ChatMessageId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("IsLiked")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("User")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChatMessageId");
-
-                    b.ToTable("LikeDislike");
                 });
 
             modelBuilder.Entity("SinaMN75Api.Models.SeenMessage", b =>
@@ -2020,28 +2004,12 @@ namespace SinaMN75Api.Migrations
                         .WithMany("Messages")
                         .HasForeignKey("ChatRoomId")
                         .OnDelete(DeleteBehavior.ClientCascade);
-
-                    b.HasOne("SinaMN75Api.Models.LikeDislike", "PrivateLike")
-                        .WithMany()
-                        .HasForeignKey("PrivateLikeId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-
-                    b.Navigation("PrivateLike");
                 });
 
             modelBuilder.Entity("SinaMN75Api.Models.Emoji", b =>
                 {
                     b.HasOne("SinaMN75Api.Models.ChatMessage", null)
                         .WithMany("Emojies")
-                        .HasForeignKey("ChatMessageId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
-                });
-
-            modelBuilder.Entity("SinaMN75Api.Models.LikeDislike", b =>
-                {
-                    b.HasOne("SinaMN75Api.Models.ChatMessage", null)
-                        .WithMany("LikeDislikes")
                         .HasForeignKey("ChatMessageId")
                         .OnDelete(DeleteBehavior.ClientCascade);
                 });
@@ -2509,8 +2477,6 @@ namespace SinaMN75Api.Migrations
             modelBuilder.Entity("SinaMN75Api.Models.ChatMessage", b =>
                 {
                     b.Navigation("Emojies");
-
-                    b.Navigation("LikeDislikes");
 
                     b.Navigation("SeenStatus");
                 });

@@ -55,5 +55,18 @@ public class AppDbContext : IdentityDbContext<UserEntity>
         }
     }
 
+    public class MessagesConfig : IEntityTypeConfiguration<ChatMessage>
+    {
+        public void Configure(EntityTypeBuilder<ChatMessage> builder)
+        {
+            builder
+            .Property(e => e.UsersMentioned)
+            .HasConversion(
+            v => JsonConvert.SerializeObject(v),
+            v => JsonConvert.DeserializeObject<List<string>>(v)
+            );
+        }
+    }
+
 }
 
