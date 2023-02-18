@@ -27,6 +27,10 @@ public class AppDbContext : IdentityDbContext<UserEntity>
     public DbSet<DiscountEntity> Discounts { get; set; }
     public DbSet<ProductInsight> ProductInsights { get; set; }
     public DbSet<VisitProducts> VisitProducts { get; set; }
+    public DbSet<ChatRoom> ChatRooms { get; set; }
+    public DbSet<ChatMessage> ChatMessages { get; set; }
+    public DbSet<SeenMessage> SeenMessages { get; set; }
+    public DbSet<ChatReaction> ChatReactions { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
