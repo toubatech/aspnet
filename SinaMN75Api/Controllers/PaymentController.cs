@@ -71,11 +71,9 @@ namespace SinaMN75Api.Controllers
 
       //  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("PayOrderStripe/{orderId}")]
-        public async Task<GenericResponse<string?>> PayOrderStripe(Guid orderId)
+        public async Task<GenericResponse<string?>> PayOrderStripe(Guid orderId,string? param)
         {
-            string param = "";
-           // GenericResponse<string?> i = await _paymentRepository.PayOrderStripe(orderId, param);
-            return null;
+            return await _paymentRepository.StripeBuyProduct(orderId, param);
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
