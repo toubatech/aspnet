@@ -192,8 +192,8 @@ namespace SinaMN75Api.Controllers
                   },
                 },
                 Mode = "payment",
-                SuccessUrl = "https://touba.sinamn75.com/payment/successStripe/" + orderId,
-                CancelUrl = "https://touba.sinamn75.com/payment/cancelStripe/" + orderId,
+                SuccessUrl = "https://api.sinamn75.com/payment/successStripe/" + orderId,
+                CancelUrl = "https://api.sinamn75.com/payment/cancelStripe/" + orderId,
             };
 
             var service = new SessionService();
