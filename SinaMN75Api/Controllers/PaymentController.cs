@@ -1,5 +1,8 @@
 ﻿
 
+using Stripe;
+using Stripe.Checkout;
+
 namespace SinaMN75Api.Controllers
 {
     [Route("[controller]")]
@@ -7,9 +10,15 @@ namespace SinaMN75Api.Controllers
     {
 
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IOrderRepository _orderRepository;
         static string ZarinPalMerchantId = "630e2aba-383e-449a-9c45-9eb324ed90fc";
 
-        public PaymentController(IPaymentRepository paymentRepository) => _paymentRepository = paymentRepository;
+        public PaymentController(IPaymentRepository paymentRepository, IOrderRepository orderRepository)
+        {
+            _paymentRepository = paymentRepository;
+            _orderRepository= orderRepository;
+
+        }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("IncreaseWalletBalance/{amount:double}")]
@@ -69,9 +78,9 @@ namespace SinaMN75Api.Controllers
 
 
 
-      //  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //  [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("PayOrderStripe/{orderId}")]
-        public async Task<GenericResponse<string?>> PayOrderStripe(Guid orderId,string? param)
+        public async Task<GenericResponse<string?>> PayOrderStripe(Guid orderId, string? param)
         {
             return await _paymentRepository.StripeBuyProduct(orderId, param);
         }
@@ -91,6 +100,118 @@ namespace SinaMN75Api.Controllers
 
         const string secret = "whsec_...";
 
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpGet("paystripe")]
+        public ActionResult paystripe()
+        {
+            return View("~/Views/Payment/paystripe.cshtml");
+        }
+
+        [HttpPost("create-checkout-session")]
+        public ActionResult CreateCheckoutSession()
+        {
+            StripeConfiguration.ApiKey = "sk_test_51MYdbtDl26fbDZBl5mwqqA1uyCJQCHG8uNave9q0tHWsOni6W79IEb753a0rRpgnwqyr97E8nY8FFKetPvl3CFVu00vXwSicjS";
+            var options = new SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>
+        {
+          new SessionLineItemOptions
+          {
+            PriceData = new SessionLineItemPriceDataOptions
+            {
+              UnitAmount = 2000,
+              Currency = "usd",
+              ProductData = new SessionLineItemPriceDataProductDataOptions
+              {
+                Name = "T-shirt",
+              },
+            },
+            Quantity = 1,
+          },
+        },
+                Mode = "payment",
+                SuccessUrl = "http://localhost:4242/success",
+                CancelUrl = "http://localhost:4242/cancel",
+            };
+
+            var service = new SessionService();
+            Session session = service.Create(options);
+
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
+        }
+
+
+        [HttpGet("cancelStripe/{orderId:guid}")]
+        public async Task<ActionResult> cancelStripe(Guid orderId)
+        {
+            await _orderRepository.UpdateOrderPaymentData(orderId, TransactionStatus.Fail,"",0);
+            return Redirect("https://touba.sinamn75.com/#/dashboard/details-order/"+orderId);
+        }
+
+        [HttpGet("successStripe/{orderId:guid}")]
+        public async Task<ActionResult>  successStripe(Guid orderId)
+        {
+            //return View("~/Views/Payment/successStripe.cshtml");
+            await _orderRepository.UpdateOrderPaymentData(orderId, TransactionStatus.Success,"", 0);
+            return Redirect("https://touba.sinamn75.com/#/dashboard/details-order/" + orderId);
+        }
+
+        //https://localhost:7125/payment/paystripe
+        [HttpPost("PayOrderStripeAsync/{orderId:guid}")]
+        public async Task<ActionResult> PayOrderStripeAsync(Guid orderId)
+        {
+            StripeConfiguration.ApiKey = "sk_test_51MYdbtDl26fbDZBl5mwqqA1uyCJQCHG8uNave9q0tHWsOni6W79IEb753a0rRpgnwqyr97E8nY8FFKetPvl3CFVu00vXwSicjS";
+
+
+            OrderCreateUpdateDto? orderPaymentData = await _orderRepository.GetOrderPaymentData(orderId);
+            if (orderPaymentData == null) return new StatusCodeResult(404);
+            if (orderPaymentData.TotalPrice == -1) return new StatusCodeResult(608);
+            if (orderPaymentData.TotalPrice == 0) return new StatusCodeResult(609);
+            long.TryParse(orderPaymentData?.TotalPrice?.ToString(), out long price);
+
+
+            var options = new SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>
+                { 
+                  new SessionLineItemOptions
+                  {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                      UnitAmount = (long)orderPaymentData?.TotalPrice,
+                      Currency = "usd",
+                      ProductData = new SessionLineItemPriceDataProductDataOptions
+                      {
+                        Name = orderId.ToString(),
+                      },
+
+                    },
+                    Quantity = 1,
+                  },
+                },
+                Mode = "payment",
+                SuccessUrl = "https://touba.sinamn75.com/payment/successStripe/" + orderId,
+                CancelUrl = "https://touba.sinamn75.com/payment/cancelStripe/" + orderId,
+            };
+
+            var service = new SessionService();
+            Session session = service.Create(options);
+            await _orderRepository.UpdateOrderPaymentData(orderId, TransactionStatus.Pending, session.Id, orderPaymentData?.TotalPrice );
+
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Index()
+        {
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+
+            Console.WriteLine(json);
+
+            return Ok();
+        }
         //[HttpPost]
         //public async Task<IActionResult> Index()
         //{
