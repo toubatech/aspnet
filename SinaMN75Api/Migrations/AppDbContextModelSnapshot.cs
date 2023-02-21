@@ -279,9 +279,6 @@ namespace SinaMN75Api.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<Guid?>("MediaId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
@@ -294,8 +291,6 @@ namespace SinaMN75Api.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("MediaId");
 
                     b.HasIndex("ProductId");
 
@@ -926,6 +921,12 @@ namespace SinaMN75Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("BookmarkEntityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("BookmarkId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
@@ -983,6 +984,8 @@ namespace SinaMN75Api.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BookmarkEntityId");
 
                     b.HasIndex("CategoryId");
 
@@ -2138,11 +2141,6 @@ namespace SinaMN75Api.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.ClientCascade);
 
-                    b.HasOne("Utilities_aspnet.Entities.MediaEntity", "Media")
-                        .WithMany()
-                        .HasForeignKey("MediaId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
-
                     b.HasOne("Utilities_aspnet.Entities.ProductEntity", "Product")
                         .WithMany("Bookmarks")
                         .HasForeignKey("ProductId")
@@ -2154,8 +2152,6 @@ namespace SinaMN75Api.Migrations
                         .OnDelete(DeleteBehavior.ClientCascade);
 
                     b.Navigation("Category");
-
-                    b.Navigation("Media");
 
                     b.Navigation("Product");
 
@@ -2337,6 +2333,11 @@ namespace SinaMN75Api.Migrations
 
             modelBuilder.Entity("Utilities_aspnet.Entities.MediaEntity", b =>
                 {
+                    b.HasOne("Utilities_aspnet.Entities.BookmarkEntity", null)
+                        .WithMany("Media")
+                        .HasForeignKey("BookmarkEntityId")
+                        .OnDelete(DeleteBehavior.ClientCascade);
+
                     b.HasOne("Utilities_aspnet.Entities.CategoryEntity", "Category")
                         .WithMany("Media")
                         .HasForeignKey("CategoryId")
@@ -2636,6 +2637,11 @@ namespace SinaMN75Api.Migrations
                         .OnDelete(DeleteBehavior.ClientCascade);
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Utilities_aspnet.Entities.BookmarkEntity", b =>
+                {
+                    b.Navigation("Media");
                 });
 
             modelBuilder.Entity("Utilities_aspnet.Entities.CategoryEntity", b =>
