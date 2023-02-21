@@ -12,7 +12,7 @@ using SinaMN75Api.Core;
 namespace SinaMN75Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230221104911_m29")]
+    [Migration("20230221110420_m29")]
     partial class m29
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -923,9 +923,6 @@ namespace SinaMN75Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("BookmarkEntityId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("BookmarkId")
                         .HasColumnType("uniqueidentifier");
 
@@ -987,7 +984,7 @@ namespace SinaMN75Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookmarkEntityId");
+                    b.HasIndex("BookmarkId");
 
                     b.HasIndex("CategoryId");
 
@@ -2335,9 +2332,9 @@ namespace SinaMN75Api.Migrations
 
             modelBuilder.Entity("Utilities_aspnet.Entities.MediaEntity", b =>
                 {
-                    b.HasOne("Utilities_aspnet.Entities.BookmarkEntity", null)
+                    b.HasOne("Utilities_aspnet.Entities.BookmarkEntity", "Bookmark")
                         .WithMany("Media")
-                        .HasForeignKey("BookmarkEntityId")
+                        .HasForeignKey("BookmarkId")
                         .OnDelete(DeleteBehavior.ClientCascade);
 
                     b.HasOne("Utilities_aspnet.Entities.CategoryEntity", "Category")
@@ -2384,6 +2381,8 @@ namespace SinaMN75Api.Migrations
                         .WithMany("Media")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientCascade);
+
+                    b.Navigation("Bookmark");
 
                     b.Navigation("Category");
 
