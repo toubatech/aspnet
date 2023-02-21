@@ -9,17 +9,11 @@ namespace SinaMN75Api.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Media_Bookmarks_BookmarkEntityId",
-                table: "Media");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Media_BookmarkEntityId",
-                table: "Media");
-
-            migrationBuilder.DropColumn(
-                name: "BookmarkEntityId",
-                table: "Media");
+            migrationBuilder.AddColumn<Guid>(
+                name: "BookmarkId",
+                table: "Media",
+                type: "uniqueidentifier",
+                nullable: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Media_BookmarkId",
@@ -44,23 +38,9 @@ namespace SinaMN75Api.Migrations
                 name: "IX_Media_BookmarkId",
                 table: "Media");
 
-            migrationBuilder.AddColumn<Guid>(
-                name: "BookmarkEntityId",
-                table: "Media",
-                type: "uniqueidentifier",
-                nullable: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Media_BookmarkEntityId",
-                table: "Media",
-                column: "BookmarkEntityId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Media_Bookmarks_BookmarkEntityId",
-                table: "Media",
-                column: "BookmarkEntityId",
-                principalTable: "Bookmarks",
-                principalColumn: "Id");
+            migrationBuilder.DropColumn(
+                name: "BookmarkId",
+                table: "Media");
         }
     }
 }

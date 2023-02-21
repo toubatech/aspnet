@@ -12,7 +12,7 @@ using SinaMN75Api.Core;
 namespace SinaMN75Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230221110420_m29")]
+    [Migration("20230221111531_m29")]
     partial class m29
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
