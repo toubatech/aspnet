@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SinaMN75Api.Core;
 
@@ -11,9 +12,10 @@ using SinaMN75Api.Core;
 namespace SinaMN75Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230222183041_m34")]
+    partial class m34
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1447,41 +1449,6 @@ namespace SinaMN75Api.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Utilities_aspnet.Entities.ProductInsight", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("ReactionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("ReactionId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ProductsInsight");
-                });
-
             modelBuilder.Entity("Utilities_aspnet.Entities.ReportEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2471,30 +2438,6 @@ namespace SinaMN75Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Utilities_aspnet.Entities.ProductInsight", b =>
-                {
-                    b.HasOne("Utilities_aspnet.Entities.ProductEntity", "Product")
-                        .WithMany("ProductInsights")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
-
-                    b.HasOne("Utilities_aspnet.Entities.ChatReaction", "Reaction")
-                        .WithMany()
-                        .HasForeignKey("ReactionId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
-
-                    b.HasOne("Utilities_aspnet.Entities.UserEntity", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Reaction");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Utilities_aspnet.Entities.ReportEntity", b =>
                 {
                     b.HasOne("Utilities_aspnet.Entities.UserEntity", "CreatorUser")
@@ -2719,8 +2662,6 @@ namespace SinaMN75Api.Migrations
                     b.Navigation("Media");
 
                     b.Navigation("OrderDetails");
-
-                    b.Navigation("ProductInsights");
 
                     b.Navigation("Reports");
 

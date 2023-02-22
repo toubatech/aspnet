@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SinaMN75Api.Core;
 
@@ -11,9 +12,10 @@ using SinaMN75Api.Core;
 namespace SinaMN75Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230222173955_m31")]
+    partial class m31
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1453,14 +1455,20 @@ namespace SinaMN75Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int?>("Count")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("ProductId")
+                    b.Property<Guid?>("ProductEntityId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ProductId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("ReactionId")
                         .HasColumnType("uniqueidentifier");
@@ -1473,7 +1481,7 @@ namespace SinaMN75Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductEntityId");
 
                     b.HasIndex("ReactionId");
 
@@ -1881,36 +1889,6 @@ namespace SinaMN75Api.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("Utilities_aspnet.Entities.VisitProducts", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("VisitProducts");
                 });
 
             modelBuilder.Entity("Utilities_aspnet.Entities.VoteEntity", b =>
@@ -2473,9 +2451,9 @@ namespace SinaMN75Api.Migrations
 
             modelBuilder.Entity("Utilities_aspnet.Entities.ProductInsight", b =>
                 {
-                    b.HasOne("Utilities_aspnet.Entities.ProductEntity", "Product")
+                    b.HasOne("Utilities_aspnet.Entities.ProductEntity", "ProductEntity")
                         .WithMany("ProductInsights")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductEntityId")
                         .OnDelete(DeleteBehavior.ClientCascade);
 
                     b.HasOne("Utilities_aspnet.Entities.ChatReaction", "Reaction")
@@ -2488,7 +2466,7 @@ namespace SinaMN75Api.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientCascade);
 
-                    b.Navigation("Product");
+                    b.Navigation("ProductEntity");
 
                     b.Navigation("Reaction");
 
@@ -2570,23 +2548,6 @@ namespace SinaMN75Api.Migrations
 
                     b.HasOne("Utilities_aspnet.Entities.UserEntity", "User")
                         .WithMany("Transactions")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
-
-                    b.Navigation("Product");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Utilities_aspnet.Entities.VisitProducts", b =>
-                {
-                    b.HasOne("Utilities_aspnet.Entities.ProductEntity", "Product")
-                        .WithMany("VisitProducts")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
-
-                    b.HasOne("Utilities_aspnet.Entities.UserEntity", "User")
-                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientCascade);
 
@@ -2725,8 +2686,6 @@ namespace SinaMN75Api.Migrations
                     b.Navigation("Reports");
 
                     b.Navigation("Teams");
-
-                    b.Navigation("VisitProducts");
 
                     b.Navigation("VoteFields");
 

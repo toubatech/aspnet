@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SinaMN75Api.Core;
 
@@ -11,9 +12,10 @@ using SinaMN75Api.Core;
 namespace SinaMN75Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230222174145_m32")]
+    partial class m32
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1453,14 +1455,20 @@ namespace SinaMN75Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int?>("Count")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("ProductId")
+                    b.Property<Guid?>("ProductEntityId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ProductId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("ReactionId")
                         .HasColumnType("uniqueidentifier");
@@ -1473,7 +1481,7 @@ namespace SinaMN75Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductEntityId");
 
                     b.HasIndex("ReactionId");
 
@@ -2473,9 +2481,9 @@ namespace SinaMN75Api.Migrations
 
             modelBuilder.Entity("Utilities_aspnet.Entities.ProductInsight", b =>
                 {
-                    b.HasOne("Utilities_aspnet.Entities.ProductEntity", "Product")
+                    b.HasOne("Utilities_aspnet.Entities.ProductEntity", "ProductEntity")
                         .WithMany("ProductInsights")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductEntityId")
                         .OnDelete(DeleteBehavior.ClientCascade);
 
                     b.HasOne("Utilities_aspnet.Entities.ChatReaction", "Reaction")
@@ -2488,7 +2496,7 @@ namespace SinaMN75Api.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientCascade);
 
-                    b.Navigation("Product");
+                    b.Navigation("ProductEntity");
 
                     b.Navigation("Reaction");
 
