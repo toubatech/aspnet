@@ -12,8 +12,8 @@ using SinaMN75Api.Core;
 namespace SinaMN75Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230222095352_m30")]
-    partial class m30
+    [Migration("20230222101112_m3۰")]
+    partial class m3۰
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1903,10 +1903,10 @@ namespace SinaMN75Api.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("ProductId")
+                    b.Property<Guid?>("ProductEntityId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ProductsId")
+                    b.Property<Guid?>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -1917,7 +1917,7 @@ namespace SinaMN75Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductsId");
+                    b.HasIndex("ProductEntityId");
 
                     b.HasIndex("UserId");
 
@@ -2591,9 +2591,9 @@ namespace SinaMN75Api.Migrations
 
             modelBuilder.Entity("Utilities_aspnet.Entities.VisitProducts", b =>
                 {
-                    b.HasOne("Utilities_aspnet.Entities.ProductEntity", "Products")
+                    b.HasOne("Utilities_aspnet.Entities.ProductEntity", "ProductEntity")
                         .WithMany("VisitProducts")
-                        .HasForeignKey("ProductsId")
+                        .HasForeignKey("ProductEntityId")
                         .OnDelete(DeleteBehavior.ClientCascade);
 
                     b.HasOne("Utilities_aspnet.Entities.UserEntity", "User")
@@ -2601,7 +2601,7 @@ namespace SinaMN75Api.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientCascade);
 
-                    b.Navigation("Products");
+                    b.Navigation("ProductEntity");
 
                     b.Navigation("User");
                 });
