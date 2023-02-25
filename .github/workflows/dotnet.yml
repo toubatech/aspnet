@@ -30,6 +30,6 @@ jobs:
         with:
           local-dir: SinaMN75Api/bin/Debug/net6.0/publish/
           server: 82.115.18.58
-          username: SinaMN75Api_aspnet
-          password: BetterSoft1234!@#$
+          username: testftp
+          password: deqn;n24t2#23$324!@#$
   
