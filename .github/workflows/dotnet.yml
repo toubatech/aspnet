@@ -32,4 +32,5 @@ jobs:
           server: 82.115.18.58
           username: testftp
           password: deqn;n24t2#23$324!@#$
+          port: 2138 
   
