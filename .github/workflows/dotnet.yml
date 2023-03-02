@@ -29,8 +29,8 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
           local-dir: SinaMN75Api/bin/Debug/net6.0/publish/
-          server: 82.115.18.58
-          username: testftp
-          password: deqn;n24t2#23$324!@#$
+          server: 103.75.196.172
+          username: site.tou_5q03m89u387
+          password: g10C8Z#Hdb
           port: 2138 
   
